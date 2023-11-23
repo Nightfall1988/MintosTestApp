@@ -11,21 +11,20 @@
                 <p name='account_type' class=""> {{$account->account_type}}</p>
             </div>
             <div class="flex">
-            <label id='account_number_label' for='account_number'><b>IBAN: </b></label>
-                <p name='account_number'> {{$account->account_number}}</p>
-                <input name='account_number' id='senderIBAN' type="hidden" value="{{$account->account_number}}"/>
+            <label id='account_id_label' for='id'><b>Account ID: </b></label>
+                <p name='id'> {{$account->id}}</p>
+                <input name='id' id='senderId' type="hidden" value="{{$account->id}}"/>
             </div>
             <div class="flex">
                 <label id='balance' for='balance'><b>Balance: </b> </label>
-                <input id='id' type="hidden" value="{{$account->id}}" />
                 <input name='senderCurrency' id='currency' type="hidden" value="{{$account->currency}}" />
                 <p name='balance'> {{$account->current_balance}} {{ $account->currency }}</p>
                 <input name='currency' type="hidden" value="{{ $account->currency }}"/>
             </div>
         </div>
         <div class="flex flex-col">
-            <label for='recipientIBAN'><b>Recipient IBAN:</b></label>
-            <input  id='recipientIBAN' class="outline-black" name='recipientIBAN' type="text"/>
+            <label for='recipientId'><b>Recipient ID:</b></label>
+            <input  id='recipientId' class="outline-black" name='recipientId' type="text"/>
         </div>
         <br>
         <input class="flex flex-col outline-black" name='transferAmount' id="amount" type="text"/>

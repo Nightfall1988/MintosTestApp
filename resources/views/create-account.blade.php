@@ -6,14 +6,6 @@
 <div class="flex justify-center">
 <form id='createForm' method='POST' action="/save">
     @csrf
-
-    <label>{{ __('Account Type: ') }}</label>
-        <select class='ml-3' name='type' placeholder='Account Type'>
-            <option>Checking</option>
-            <option>Investment</option>
-        </select>
-        <br>
-        <br>
     <label>{{ __('Currency: ') }}</label>
         <select class='ml-10' name='currency' placeholder='Currency'>
             <option>EUR</option>

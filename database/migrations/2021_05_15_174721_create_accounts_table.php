@@ -17,8 +17,6 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->float('current_balance');
-            $table->string('account_type');
-            $table->string('account_number');
             $table->string('currency');
             $table->timestamps();
         });

@@ -13,10 +13,10 @@ class TransactionService
 
     private float $amount;
 
-    public function __construct(string $senderIBAN, string $recipientIBAN, float $amount)
+    public function __construct(string $senderId, string $recipientId, float $amount)
     {
-        $this->sender = Account::where('account_number', '=', $senderIBAN)->first();
-        $this->recipient = Account::where('account_number', '=', $recipientIBAN)->first();
+        $this->sender = Account::where('id', '=', $senderId)->first();
+        $this->recipient = Account::where('id', '=', $recipientId)->first();
         $this->amount = $amount;
     }
     public function transfer()
@@ -100,10 +100,8 @@ class TransactionService
     public function saveToHistory()
     {
         $transaction = new Transaction;
-        $transaction->sender_id = $this->sender->user_id;
-        $transaction->sender_account = $this->sender->account_number;
-        $transaction->recipient_id = $this->recipient->user_id;
-        $transaction->recipient_account = $this->recipient->account_number;
+        $transaction->sender_id = $this->sender->id;
+        $transaction->recipient_id = $this->recipient->id;
         $transaction->amount = $this->amount;
         $transaction->currency = $this->sender->currency;
         $transaction->save();

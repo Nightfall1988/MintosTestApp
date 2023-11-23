@@ -1870,13 +1870,14 @@ __webpack_require__.r(__webpack_exports__);
 
       event.preventDefault();
       this.form = document.getElementById('transferForm');
-      this.id = document.getElementById('id').value;
+      this.id = document.getElementById('recipientId').value;
+      console.log(this.id);
       this.amount = document.getElementById('amount').value;
-      this.senderAccount = document.getElementById('senderIBAN').value;
-      this.recipientAccount = document.getElementById('recipientIBAN').value;
+      this.senderAccount = document.getElementById('senderId').value;
+      this.recipientAccount = document.getElementById('recipientId').value;
 
       if (this.senderAccount == this.recipientAccount || this.recipientAccount == '') {
-        this.message = 'The recipient IBAN is incorrect. Please check your spelling';
+        this.message = 'The recipient ID is incorrect. Please check your spelling';
         alert(this.message);
       } else {
         this.balance = axios.get('/get-balance/' + this.id).then(function (response) {

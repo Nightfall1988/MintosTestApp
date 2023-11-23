@@ -18,9 +18,7 @@ class Transaction extends Model
     protected $fillable = [
         'id',
         'sender_id',
-        'sender_account',
         'recipient_id',
-        'recipient_account',
         'amount_sent',
     ];
 }

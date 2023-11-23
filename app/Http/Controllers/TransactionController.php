@@ -16,10 +16,10 @@ class TransactionController extends Controller
     public function send(Request $request)
     {
         $currency = $request->senderCurrency;
-        $recipientIBAN = $request->recipientIBAN;
-        $senderIBAN = $request->account_number;
+        $recipientId = $request->recipientId;
+        $senderId = $request->id;
         $amount = floatval($request->transferAmount);
-        $this->service = new TransactionService($senderIBAN, $recipientIBAN, $amount);
+        $this->service = new TransactionService($senderId, $recipientId, $amount);
         $this->service->transfer();
         return view('transactionApproved', compact('amount', 'currency'));
     }

@@ -21,17 +21,14 @@
             <div id='container' class="border-solid border-4 border-blue-800 ml-10 ml-10">
                 <div id='account_info' class="ml-3">
                     <div class="flex">
-                    <label id='account_type_label' for='account_type'><b>Account Type: </b></label>
-                        <p name='account_type' class=""> {{$account->account_type}}</p>
-                    </div>
-                    <div class="flex">
-                    <label id='account_number_label' for='account_number'><b>IBAN: </b></label>
-                        <p name='account_number'> {{$account->account_number}}</p>
-                        <input name='account_number' type="hidden" value="{{$account->account_number}}"/>
-                    </div>
-                    <div class="flex">
-                        <label id='balance' for='balance'><b>Balance: </b> </label>
-                        <p name='balance'> {{$account->current_balance}} {{ $account->currency }}</p>
+                        <label id='account_number_label' for='account_number'><b>ID: </b></label>
+                            <p name='account_number'> {{$account->id}}</p>
+                            <input name='account_number' type="hidden" value="{{$account->id}}"/>
+                        </div>
+                        <div class="flex">
+                            <label id='balance' for='balance'><b>Balance: </b> </label>
+                            <p name='balance'> {{$account->current_balance}} {{ $account->currency }}</p>
+                        </div>
                     </div>
                 </div>
                 <br>

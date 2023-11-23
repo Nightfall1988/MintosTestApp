@@ -31,7 +31,9 @@ class ProfileController extends Controller
     {
         $this->service->execute($request);
         $accountCollection = $this->service->retrieveAccounts();
-        return view('home',compact('accountCollection'));
+        if ($accountCollection) {
+            return redirect('/home')->with('accountCollection',$accountCollection);
+        }
     }
 
     public function show() 

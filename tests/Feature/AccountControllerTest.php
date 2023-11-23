@@ -12,34 +12,6 @@ use Mockery;
 
 class AccountControllerTest extends TestCase
 {
-    public function testShowInvestmentAccount()
-    {
-        $accountServiceMock = Mockery::mock(AccountService::class);
-        $accountServiceMock->shouldReceive('findAccount')->andReturn((object)['account_type' => 'Investment']);
-        $accountServiceMock->shouldReceive('findShares');
-        $accountServiceMock->shouldReceive('getCheckingAccounts');
-
-        $controller = new AccountController($accountServiceMock);
-
-        $request = Request::create('/show', 'GET', ['account_number' => '123']);
-        $response = $controller->show($request);
-
-        $this->assertEquals('investmentAccount', $response->name());
-    }
-
-    public function testShowCheckingAccount()
-    {
-        $accountServiceMock = Mockery::mock(AccountService::class);
-        $accountServiceMock->shouldReceive('findAccount')->andReturn((object)['account_type' => 'Checking']);
-
-        $controller = new AccountController($accountServiceMock);
-
-        $request = Request::create('/show', 'GET', ['account_number' => '456']);
-        $response = $controller->show($request);
-
-        $this->assertEquals('checkingAccount', $response->name());
-    }
-
     public function testVerifyTransaction()
     {
         $accountServiceMock = Mockery::mock(AccountService::class);

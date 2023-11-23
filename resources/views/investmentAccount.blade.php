@@ -12,9 +12,9 @@
                         <p name='account_type' class=""> {{$account->account_type}}</p>
                     </div>
                     <div class="flex">
-                    <label id='account_number_label' for='account_number'><b>IBAN: </b></label>
-                        <p name='account_number'> {{$account->account_number}}</p>
-                        <input id='senderIBAN' name='account_number' type="hidden" value="{{$account->account_number}}"/>
+                    <label id='account_id_label' for='id'><b>ID: </b></label>
+                        <p name='id'> {{$account->id}}</p>
+                        <input id='senderId' name='id' type="hidden" value="{{$account->id}}"/>
                     </div>
                     <div class="flex">
                         <label id='balanceLabel' for='balance'><b>Balance: </b> </label>
@@ -23,10 +23,10 @@
                         <input name='currency' type="hidden" value="{{ $account->currency }}"/>
                     </div>
                 <div class="flex flex-col">
-                    <label for='recipientIBAN'><b>Recipient IBAN:</b></label>
-                    <select id='recipientIBAN' name='recipientIBAN'>
+                    <label for='recipientId'><b>Recipient ID:</b></label>
+                    <select id='recipientId' name='recipientId'>
                     @foreach ($checkingAccounts->all() as $account)
-                        <option>{{ $account->account_number }}</option>
+                        <option>{{ $account->id }}</option>
                     @endforeach
                     </select>
                 </div>

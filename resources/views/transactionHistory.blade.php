@@ -7,18 +7,18 @@
         <div class="flex justify-center space-x-1.5">
             <table>
                 <tr class="table-row space-x-0.5">
-                    <th>Your account</th>
+                    <th>Sender account ID</th>
                     <th>Amount</th>
                     <th>Currency</th>
-                    <th>Recipient Account</th>
+                    <th>Recipient Account ID</th>
                     <th>Transaction Time</th>
                 </tr>
         @foreach ($tansactionCollection->all() as $transaction)
                 <tr class="border-solid border-2 border-blue-800">
-                <td class="border-solid border-2 border-blue-800">{{ $transaction->sender_account }}</td>
+                <td class="border-solid border-2 border-blue-800">{{ $transaction->sender_id }}</td>
                 <td class="border-solid border-2 border-blue-800">{{ $transaction->amount }}</td>
                 <td class="border-solid border-2 border-blue-800">{{ $transaction->currency }}</td>
-                <td class="border-solid border-2 border-blue-800">{{ $transaction->recipient_account }}</td>
+                <td class="border-solid border-2 border-blue-800">{{ $transaction->recipient_id }}</td>
                 <td class="border-solid border-2 border-blue-800">{{ $transaction->created_at }}</td>
                 </tr>
         @endforeach

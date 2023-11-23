@@ -12,14 +12,8 @@ class AccountController extends Controller
 
     public function show(Request $request) 
     {
-        $account = $this->service->findAccount($request->account_number);
-        if ($account->account_type == 'Investment') {
-            $shares = $this->service->findShares($request->accountId);
-            $checkingAccounts = $this->service->getCheckingAccounts();
-            return view('investmentAccount', compact('account', 'shares', 'checkingAccounts')); // RETURN INVESTMENT ACCOUNT VIEW
-        } else {
-            return view('checkingAccount', compact('account')); // RETURN CHECKING ACCOUNT VIEW
-        }
+        $account = $this->service->findAccountById($request->id);
+        return view('checkingAccount', compact('account')); // RETURN CHECKING ACCOUNT VIEW
     }
 
     public function verifyTransaction(Request $request)
