@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->integer('sender_id');
             $table->integer('recipient_id');
+            $table->integer('client_id');
             $table->float('amount');
             $table->string('currency');
             $table->timestamps();

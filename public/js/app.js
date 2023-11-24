@@ -1880,8 +1880,12 @@ __webpack_require__.r(__webpack_exports__);
         this.message = 'The recipient ID is incorrect. Please check your spelling';
         alert(this.message);
       } else {
-        this.balance = axios.get('/get-balance/' + this.id).then(function (response) {
+        this.balance = axios.get('/get-balance/' + this.senderAccount).then(function (response) {
           _this.balance = response.data;
+          console.log(_this.senderAccount);
+          console.log(_this.amount);
+          console.log(_this.balance);
+          console.log(response.data);
 
           if (_this.amount <= _this.balance) {
             _this.form.submit();

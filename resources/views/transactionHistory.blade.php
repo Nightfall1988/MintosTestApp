@@ -25,6 +25,10 @@
             </table>
         </div>
         <br>
+        <div class="flex justify-center mt-4">
+            {{ $tansactionCollection->links() }}
+        </div>
+        <br>
         <div class="flex justify-center">
         <button class="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 border border-black-700 rounded ml-10 mt-3 mb-10">Back to Homepage</button>
         </div>

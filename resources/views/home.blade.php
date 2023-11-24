@@ -30,12 +30,12 @@
                             <p name='balance'> {{$account->current_balance}} {{ $account->currency }}</p>
                         </div>
                     </div>
+                    <div class="">
+                        <input name='accountId' type="hidden" value="{{ $account->id }}"/>
+                        <button class="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 border border-black-700 rounded m-3" formaction="/account/{{ $account->id }}">Use This Account</button>
+                    </div>
                 </div>
                 <br>
-                <div class="">
-                    <input name='accountId' type="hidden" value="{{ $account->id }}"/>
-                    <button class="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 border border-black-700 rounded m-3" formaction="/account/{{ $account->id }}">Use This Account</button>
-                </div>
             </div>
         </form >
         <br>

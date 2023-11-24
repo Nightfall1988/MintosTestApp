@@ -25,9 +25,9 @@ class AccountController extends Controller
     }
 
 
-    public function balance(Request $request)
+    public function balance($id)
     {
-        $account = $this->service->findAccountById($request->id);
+        $account = $this->service->findAccountById($id);
         return $account->current_balance;
     }
 }

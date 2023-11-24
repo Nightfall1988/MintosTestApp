@@ -4,6 +4,7 @@ use App\Models\Account;
 use App\Models\Currency;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionService 
 {
@@ -65,26 +66,26 @@ class TransactionService
 
     public function convertWithSenderEuro($recipientCurrency, float $amount)
     {
-        $converted = number_format(($recipientCurrency->rate / 100000) * $amount, 2); // CONVERTED EURO TO STH
+        $converted = number_format(($recipientCurrency->rate / 100000) * $amount, 2, '.', ''); // CONVERTED EURO TO STH
         $this->make($amount, $converted);
     }
 
     public function convertWithRecipientEuro(Currency $recipientCurrency, float $amount) // ISNT RIGHT
     {
-        $converted = number_format((100000/$recipientCurrency->rate) * $amount, 2); 
+        $converted = number_format((100000/$recipientCurrency->rate) * $amount, 2, '.', ''); 
         $this->make($amount, $converted);
     }
 
     public function convertWithoutEuro(Currency $senderCurrency, Currency $recipientCurrency, float $amount)
     {
-        $senderConvertedToEuro = number_format((100000 / $senderCurrency->rate) * $amount, 2);
-        $convertedToRecipientCurrency = number_format(($recipientCurrency->rate / 100000) * $senderConvertedToEuro, 2);
+        $senderConvertedToEuro = number_format((100000 / $senderCurrency->rate) * $amount, 2, '.', '');
+        $convertedToRecipientCurrency = number_format(($recipientCurrency->rate / 100000) * $senderConvertedToEuro, 2, '.', '');
         $this->make($amount, $convertedToRecipientCurrency);
     }
 
     public function convertToEur(Currency $currency, float $amount)
     {
-        $converted = number_format(($currency->rate / 100000) * $amount, 2);
+        $converted = number_format(($currency->rate / 100000) * $amount, 2, '.', '');
         return $converted;
     }
 
@@ -100,6 +101,8 @@ class TransactionService
     public function saveToHistory()
     {
         $transaction = new Transaction;
+        $clientId = Auth::id();
+        $transaction->client_id = $clientId;
         $transaction->sender_id = $this->sender->id;
         $transaction->recipient_id = $this->recipient->id;
         $transaction->amount = $this->amount;

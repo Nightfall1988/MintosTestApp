@@ -34,9 +34,13 @@ export default {
                 this.message = 'The recipient ID is incorrect. Please check your spelling'
                 alert(this.message)
             } else {
-                this.balance = axios.get('/get-balance/' + this.id)
+                this.balance = axios.get('/get-balance/' + this.senderAccount)
                     .then((response) => {
                     this.balance = response.data;
+                    console.log(this.senderAccount)
+                    console.log(this.amount)
+                    console.log(this.balance)
+                    console.log(response.data)
                     if (this.amount <= this.balance)
                     {
                         this.form.submit()
