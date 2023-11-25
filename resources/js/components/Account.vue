@@ -28,19 +28,22 @@ export default {
             this.amount = document.getElementById('amount').value;            
             this.senderAccount = document.getElementById('senderId').value
             this.recipientAccount = document.getElementById('recipientId').value
-
+            
             if (this.senderAccount == this.recipientAccount || this.recipientAccount == '')
             {
                 this.message = 'The recipient ID is incorrect. Please check your spelling'
                 alert(this.message)
             } else {
+                this.currency = document.getElementById('reciever-currency').value
+
+                if (recipientCurrency.value != this.currency) {
+                    alert('Currency mismatch error: Please select sender currency, so that it matches reciever account\'s currency');
+                    return;
+                }
+
                 this.balance = axios.get('/get-balance/' + this.senderAccount)
                     .then((response) => {
                     this.balance = response.data;
-                    console.log(this.senderAccount)
-                    console.log(this.amount)
-                    console.log(this.balance)
-                    console.log(response.data)
                     if (this.amount <= this.balance)
                     {
                         this.form.submit()

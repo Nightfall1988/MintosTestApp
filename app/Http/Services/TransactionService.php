@@ -16,6 +16,7 @@ class TransactionService
 
     public function __construct(string $senderId, string $recipientId, float $amount)
     {
+        // MAKE SO SENDER CAN'T SEND MORE THAN HE HAS
         $this->sender = Account::where('id', '=', $senderId)->first();
         $this->recipient = Account::where('id', '=', $recipientId)->first();
         $this->amount = $amount;
@@ -27,6 +28,9 @@ class TransactionService
         } else {
             $this->convert();
         }
+    }
+
+    public function getRecieverCurrency($recipientId) {
     }
 
     public function checkCurrency()

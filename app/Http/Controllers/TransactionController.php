@@ -8,7 +8,6 @@ use App\Http\Services\TransactionService;
 use App\Models\TransactionHistory;
 use App\Models\Account;
 use App\Models\Transaction;
-use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -16,23 +15,38 @@ class TransactionController extends Controller
 
     public function send(Request $request)
     {
-        $currency = $request->senderCurrency;
-        $recipientId = $request->recipientId;
-        $senderId = $request->id;
-        $amount = floatval($request->transferAmount);
-        $this->service = new TransactionService($senderId, $recipientId, $amount);
-        $this->service->transfer();
-        return view('transactionApproved', compact('amount', 'currency'));
+        $recipientAccount = Account::where('id', $request->recipientId)->first();
+        if ($recipientAccount->currency != $request->currency) {
+            return response()->view('errors.currency-mismatch', [], 400);
+        } else {
+            $currency = $request->senderCurrency;
+            $recipientId = $request->recipientId;
+            $senderId = $request->id;
+            $amount = floatval($request->transferAmount);
+            $this->service = new TransactionService($senderId, $recipientId, $amount);
+            $this->service->transfer();
+            return view('transactionApproved', compact('amount', 'currency'));
+        }
     }
 
-    public function show(Request $request)
+    public function getRecieverCurrency($recipientId) {
+        $account = Account::where('id','=', $recipientId)->first();
+        if ($account == null) {
+            return '0';
+        } else {
+            return $account->currency;
+        }
+    }
+
+    public function show($accountId)
     {
-        $id = Auth::id();
-        $tansactionCollection = Transaction::where('client_id', $id)->orderBy('created_at', 'desc')->paginate(10);
-
-        return view('transactionHistory', compact('tansactionCollection'));
+        $tansactionCollection = Transaction::where('sender_id', $accountId)
+        ->orWhere('recipient_id', $accountId)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+        return view('transactionHistory', compact('tansactionCollection', 'accountId'));
     }
-
+    
     public function sellStock(Request $request)
     {
         $data = (json_decode(array_keys($_POST)[0], true));

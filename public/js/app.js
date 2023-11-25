@@ -1880,12 +1880,15 @@ __webpack_require__.r(__webpack_exports__);
         this.message = 'The recipient ID is incorrect. Please check your spelling';
         alert(this.message);
       } else {
+        this.currency = document.getElementById('reciever-currency').value;
+
+        if (recipientCurrency.value != this.currency) {
+          alert('Currency mismatch error: Please select sender currency, so that it matches reciever account\'s currency');
+          return;
+        }
+
         this.balance = axios.get('/get-balance/' + this.senderAccount).then(function (response) {
           _this.balance = response.data;
-          console.log(_this.senderAccount);
-          console.log(_this.amount);
-          console.log(_this.balance);
-          console.log(response.data);
 
           if (_this.amount <= _this.balance) {
             _this.form.submit();
@@ -2035,10 +2038,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2052,38 +2055,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      stockSymbol: '',
-      row: Element,
-      index: 0,
-      table: Element,
-      amount: 0,
-      currentPrice: 0,
-      profit: 0,
-      id: 0,
-      data: 0
+      recipientAccountId: '',
+      recipientCurrency: '',
+      recipientMessage: ''
     };
   },
   methods: {
-    handleClick: function handleClick(e) {
-      e.preventDefault();
-      this.table = document.getElementById('stockTable');
-      this.id = document.getElementById('id').value;
-      this.row = e.target.parentNode.parentNode.parentNode;
-      this.stockSymbol = this.row.cells[0].innerHTML;
-      this.amount = this.row.cells[1].innerHTML;
-      this.currentPrice = this.row.cells[4].innerHTML;
-      this.profit = this.currentPrice * this.amount;
-      this.data = this.profit;
-      axios.post('/update-stock/' + this.id + '/' + this.stockSymbol, JSON.stringify({
-        id: this.id,
-        stockSymbol: this.stockSymbol,
-        profit: this.profit
-      })).then(function (response) {
-        console.log(response);
-      }), this.index = this.row.rowIndex;
+    getCurrency: function getCurrency() {
+      var _this = this;
+
+      this.recipientAccountId = document.getElementById('recipientId').value;
+      console.log(this.recipientAccountId);
+
+      if (this.recipientAccountId != '') {
+        axios.get('/get-reciever-currency/' + this.recipientAccountId).then(function (response) {
+          if (response.data == 0) {
+            _this.recipientMessage = 'Account with this ID hasn\'t been found.';
+          } else {
+            _this.recipientCurrency = response.data;
+            _this.recipientMessage = 'Recipient account currency: ' + _this.recipientCurrency;
+          }
+        });
+      } else {
+        this.recipientMessage = '';
+      }
     }
   }
 });
@@ -2184,7 +2189,7 @@ vue__WEBPACK_IMPORTED_MODULE_0__.default.component('two-factor-auth', __webpack_
 vue__WEBPACK_IMPORTED_MODULE_0__.default.component('create-account', __webpack_require__(/*! ./components/CreateAccount.vue */ "./resources/js/components/CreateAccount.vue").default);
 vue__WEBPACK_IMPORTED_MODULE_0__.default.component('account-info', __webpack_require__(/*! ./components/AccountInformation.vue */ "./resources/js/components/AccountInformation.vue").default);
 vue__WEBPACK_IMPORTED_MODULE_0__.default.component('account-balance', __webpack_require__(/*! ./components/Account.vue */ "./resources/js/components/Account.vue").default);
-vue__WEBPACK_IMPORTED_MODULE_0__.default.component('sell-stock-button', __webpack_require__(/*! ./components/SellStockButton.vue */ "./resources/js/components/SellStockButton.vue").default);
+vue__WEBPACK_IMPORTED_MODULE_0__.default.component('recipient-currency', __webpack_require__(/*! ./components/RecipientCurrency.vue */ "./resources/js/components/RecipientCurrency.vue").default);
 window.app = new vue__WEBPACK_IMPORTED_MODULE_0__.default({
   el: '#app'
 });
@@ -19797,10 +19802,10 @@ component.options.__file = "resources/js/components/CreateAccount.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/SellStockButton.vue":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/SellStockButton.vue ***!
-  \*****************************************************/
+/***/ "./resources/js/components/RecipientCurrency.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/RecipientCurrency.vue ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -19808,8 +19813,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SellStockButton.vue?vue&type=template&id=78acd49b& */ "./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b&");
-/* harmony import */ var _SellStockButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SellStockButton.vue?vue&type=script&lang=js& */ "./resources/js/components/SellStockButton.vue?vue&type=script&lang=js&");
+/* harmony import */ var _RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RecipientCurrency.vue?vue&type=template&id=97649522& */ "./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522&");
+/* harmony import */ var _RecipientCurrency_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RecipientCurrency.vue?vue&type=script&lang=js& */ "./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -19819,9 +19824,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
-  _SellStockButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
-  _SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__.render,
-  _SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _RecipientCurrency_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__.render,
+  _RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
   null,
@@ -19831,7 +19836,7 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/SellStockButton.vue"
+component.options.__file = "resources/js/components/RecipientCurrency.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -19939,10 +19944,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/SellStockButton.vue?vue&type=script&lang=js&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/SellStockButton.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************/
+/***/ "./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -19950,8 +19955,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellStockButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SellStockButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellStockButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RecipientCurrency_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RecipientCurrency.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RecipientCurrency_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
 
 /***/ }),
 
@@ -20039,19 +20044,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b& ***!
-  \************************************************************************************/
+/***/ "./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522& ***!
+  \**************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellStockButton_vue_vue_type_template_id_78acd49b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SellStockButton.vue?vue&type=template&id=78acd49b& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RecipientCurrency_vue_vue_type_template_id_97649522___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RecipientCurrency.vue?vue&type=template&id=97649522& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522&");
 
 
 /***/ }),
@@ -20275,10 +20280,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b&":
-/*!***************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/SellStockButton.vue?vue&type=template&id=78acd49b& ***!
-  \***************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RecipientCurrency.vue?vue&type=template&id=97649522& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -20291,22 +20296,38 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c(
-      "button",
-      {
-        ref: "submitButton",
-        on: {
-          click: function($event) {
-            return _vm.handleClick($event)
-          }
-        }
-      },
-      [_vm._v("SELL ALL")]
-    )
+  return _c("div", [
+    _c("div", { staticClass: "flex flex-row" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "outline-black",
+        staticStyle: { width: "11rem" },
+        attrs: { id: "recipientId", name: "recipientId", type: "text" },
+        on: { input: _vm.getCurrency }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", [
+      _vm._v("\n        " + _vm._s(this.recipientMessage) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("input", {
+      attrs: { type: "hidden", id: "recipientCurrency" },
+      domProps: { value: _vm.recipientCurrency }
+    })
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "recipientId" } }, [
+      _c("b", [_vm._v("Recipient account ID:  ")])
+    ])
+  }
+]
 render._withStripped = true
 
 

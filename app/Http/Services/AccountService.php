@@ -34,7 +34,7 @@ class AccountService
         return $account;
     }
 
-    public function getCheckingAccounts()
+    public function getAccounts()
     {
         $accountCollection = Account::where('user_id',  Auth::user()->id)->get();
         return $accountCollection;

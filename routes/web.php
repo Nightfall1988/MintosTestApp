@@ -37,5 +37,6 @@ Route::post('/verified-transaction', [TransactionController::class, 'send']);
 Route::post('/approve-transaction', [TransactionController::class, 'verify'])->middleware('auth');
 Route::post('/stock-options', [AccountController::class, 'stocks'])->middleware('auth');
 Route::get('/get-balance/{id}', [AccountController::class, 'balance'])->middleware('auth');
-Route::get('/transaction-history', [TransactionController::class, 'show'])->middleware('auth');
+Route::get('/get-reciever-currency/{id}', [TransactionController::class, 'getRecieverCurrency'])->middleware('auth');
+Route::get('/transaction-history/{id}', [TransactionController::class, 'show'])->middleware('auth');
 

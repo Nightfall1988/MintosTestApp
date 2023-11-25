@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Http\Services\AccountService;
 use Illuminate\Http\Request;
+use App\Models\Currency;
 
 class AccountController extends Controller
 {
@@ -12,8 +13,10 @@ class AccountController extends Controller
 
     public function show(Request $request) 
     {
+        $currencyCollection = Currency::all();
+        
         $account = $this->service->findAccountById($request->id);
-        return view('checkingAccount', compact('account')); // RETURN CHECKING ACCOUNT VIEW
+        return view('userAccount', compact('account', 'currencyCollection')); // RETURN CHECKING ACCOUNT VIEW
     }
 
     public function verifyTransaction(Request $request)

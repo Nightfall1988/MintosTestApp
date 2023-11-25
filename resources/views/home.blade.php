@@ -55,7 +55,6 @@
 
         @csrf
         <button class="bg-blue-800 hover:bg-blue-600 text-white font-bold py-2 px-4 border border-black-700 rounded ml-10 mt-3 mb-10" formaction="/create-account">Create Account</button>
-        <button class="bg-blue-800 hover:bg-blue-600 text-white font-bold py-2 px-4 border border-black-700 rounded ml-10 mt-3 mb-10" formaction="/transaction-history">Transaction Hisory</button>
     </form>
 </div>
 @endsection
