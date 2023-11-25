@@ -18,12 +18,8 @@ use App\Http\Controllers\TransactionController;
 */
 
 Route::get('/', function () {
-    return view('firstPage');
+    return redirect('/login');
 });
-
-// Route::middleware('auth')->get('home', function() {
-//     return view('home');
-// });
 
 Route::post('/createAccount', function () {
     return view('createAccount');
