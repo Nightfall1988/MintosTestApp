@@ -16,6 +16,7 @@ class TransactionController extends Controller
     public function send(Request $request)
     {
         $recipientAccount = Account::where('id', $request->recipientId)->first();
+        
         if ($recipientAccount->currency != $request->currency) {
             return response()->view('errors.currency-mismatch', [], 400);
         } else {
@@ -45,13 +46,6 @@ class TransactionController extends Controller
         ->orderBy('created_at', 'desc')
         ->paginate(10);
         return view('transactionHistory', compact('tansactionCollection', 'accountId'));
-    }
-    
-    public function sellStock(Request $request)
-    {
-        $data = (json_decode(array_keys($_POST)[0], true));
-        
-        return ($data);
     }
 }
 
