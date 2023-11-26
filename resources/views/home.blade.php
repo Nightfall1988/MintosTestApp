@@ -1,15 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class='flex ml-10 mt-10 space-x-96'>
-<h2 class="text-3xl mb-10">
-    Hello {{ auth()->user()->name }}!
-</h2>
-    <div class="flex justify-end">
-    <two-factor-auth :enabled="{{ json_encode(auth()->user()->twoFactorAuthEnabled()) }}"></two-factor-auth>
+<div class="m-5 flex justify-between">
+    <div class='flex ml-10 space-x-96 ml-10'>
+        <h2 class="text-3xl mb-10">
+            Hello {{ auth()->user()->name }}!
+        </h2>
+    </div>
+    <div class='flex ml-10 space-x-96 mr-10'>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="bg-blue-200 hover:bg-blue-400 text-black font-bold py-2 px-4 border border-black-700 rounded ml-10">Logout</button>
+        </form>
     </div>
 </div>
-
 <!-- THIS WORKS IT JUST NEEDS STRUCTURE -->
 @if  ($accountCollection->all() == [])
 <div class="flex justify-center">You don't have an account yet. Press "Create Account" to start.</div>
@@ -43,11 +47,7 @@
     </div>
     @endif
 <div class='mr-10'>
-<form method="POST" action="{{ route('logout') }}">
-    @csrf
-    
-    <button class="bg-blue-200 hover:bg-blue-400 text-black font-bold py-2 px-4 border border-black-700 rounded ml-10">Logout</button>
-</form>
+
 </div>
 <div class="flex justify-center">
     <form id='acc' method='GET'>
