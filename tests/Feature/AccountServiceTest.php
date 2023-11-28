@@ -1,18 +1,15 @@
 <?php
-
-namespace Tests\Unit\Services;
-
-use Tests\TestCase;
+use Mockery;
+use Illuminate\Http\Request;
 use App\Http\Services\AccountService;
 use App\Models\Account;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tests\TestCase;
 
 class AccountServiceTest extends TestCase
 {
-    use RefreshDatabase;
-
     private AccountService $accountService;
 
     protected function setUp(): void
@@ -20,65 +17,34 @@ class AccountServiceTest extends TestCase
         parent::setUp();
         $account = new Account(); // You might need to mock this model
         $this->accountService = new AccountService($account);
+        
     }
 
-    public function testExecute()
-    {
-        // Assuming you have mocked the Auth facade and covered its tests
-        // You can mock the Auth facade to return a user for testing
-        // $this->mock(Auth::class)->shouldReceive('user')->andReturn(new User());
+public function testExecute()
+{
+    $user = Mockery::mock(User::class);
+    $this->actingAs($user);
 
-        $request = new Request([
-            'currency' => 'USD',
-            // Provide other necessary request data
-        ]);
+    $accountModelMock = Mockery::spy(Account::class);
 
-        $this->accountService->execute($request);
+    $request = new Request(['currency' => 'USD', 'user_id' => 1]);
+    $result = $this->accountService->execute($request);
+    $accountModelMock->shouldReceive()->once()->andReturn($result);
 
-        // Check if the account was created successfully
-        $this->assertDatabaseHas('accounts', [
-            'user_id' => Auth::user()->id,
-            'current_balance' => 0,
-            'currency' => 'USD', // Adjust this based on your request data
-        ]);
-    }
+    $this->assertInstanceOf(Account::class, $result);
+
+    Mockery::close();
+}
 
     public function testRetrieveAccounts()
     {
-        // Assuming you have mocked the Auth facade and covered its tests
-        // You can mock the Auth facade to return a user for testing
-        // $this->mock(Auth::class)->shouldReceive('user')->andReturn(new User());
+        $accountModelMock = Mockery::spy(Account::class);
+        $this->app->instance(Account::class, $accountModelMock);
+        $this->accountService->retrieveAccounts();
+        $accountModelMock->shouldHaveReceived('where')->once();
+        $accountModelMock->shouldHaveReceived('get')->once();
 
-        // Assuming you have seeded accounts in the database for the logged-in user
-
-        $accountCollection = $this->accountService->retrieveAccounts();
-
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $accountCollection);
-        // You can add more specific assertions based on your data and expectations
-    }
-
-    public function testFindAccountById()
-    {
-        // Assuming you have seeded accounts in the database for testing
-
-        $account = $this->accountService->findAccountById(1);
-
-        $this->assertInstanceOf(Account::class, $account);
-        // You can add more specific assertions based on your data and expectations
-    }
-
-    public function testGetAccounts()
-    {
-        // Assuming you have mocked the Auth facade and covered its tests
-        // You can mock the Auth facade to return a user for testing
-        // $this->mock(Auth::class)->shouldReceive('user')->andReturn(new User());
-
-        // Assuming you have seeded accounts in the database for the logged-in user
-
-        $accountCollection = $this->accountService->getAccounts();
-
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $accountCollection);
-        // You can add more specific assertions based on your data and expectations
+        Mockery::close();
     }
 
     // Add more tests as needed

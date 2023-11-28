@@ -8,56 +8,54 @@ use App\Http\Services\AccountService;
 use App\Models\Currency;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use App\Models\Account;
+use App\Models\User;
+use Mockery;
 
 class ProfileControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private ProfileController $profileController;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $accountService = new AccountService(); // You might need to mock this service
+        $account = new Account;
+        $accountService = new AccountService($account); // You might need to mock this service
         $this->profileController = new ProfileController($accountService);
     }
 
     public function testIndex()
     {
-        $response = $this->profileController->index();
+        $user = Mockery::mock(User::class);
+        $this->actingAs($user);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertViewIs('create-account');
-        $this->assertViewHas('currencyCollection');
+        $response = $this->get('/create-account');
+        $response->assertViewIs('create-account');
+        $response->assertViewHas('currencyCollection');
     }
 
     public function testStore()
     {
-        $request = new Request([
-            // Provide necessary request data
-        ]);
+        $request = [
+            'user_id' => rand(1,100),
+            'currency' => 'MXN'
+        ];
 
-        // Assuming you have mocked the AccountService and covered its tests
-        // You can mock the AccountService if it interacts with external services or databases
-        // $this->mock(AccountService::class)->shouldReceive('execute', 'retrieveAccounts')->andReturn('someReturnValue');
+        $response = $this->post('/save', $request);
 
-        $response = $this->profileController->store($request);
-
-        $this->assertRedirect('/home');
-        $this->assertSessionHas('accountCollection');
+        $response->assertRedirect('/home');
+        $response->assertSessionHas('accountCollection');
     }
 
     public function testShow()
     {
-        // Assuming you have mocked the AccountService and covered its tests
-        // You can mock the AccountService if it interacts with external services or databases
-        // $this->mock(AccountService::class)->shouldReceive('retrieveAccounts')->andReturn('someReturnValue');
+        $user = Mockery::mock(User::class)->makePartial();
+        $this->actingAs($user);
+        $response = $this->get('/home');
 
-        $response = $this->profileController->show();
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertViewIs('home');
-        $this->assertViewHas('accountCollection');
+        $response->assertOk();
+        $response->assertViewIs('home');
+        $response->assertViewHas('accountCollection');
     }
 
     // Add more tests as needed

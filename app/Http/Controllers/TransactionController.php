@@ -15,8 +15,9 @@ class TransactionController extends Controller
 
     public function send(Request $request)
     {
+
         $recipientAccount = Account::where('id', $request->recipientId)->first();
-        
+
         if ($recipientAccount->currency != $request->currency) {
             return response()->view('errors.currency-mismatch', [], 400);
         } else {

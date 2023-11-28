@@ -22,7 +22,7 @@
     @foreach($accountCollection->all() as $account)
         <form method="POST">
             @csrf
-            <div id='container' class="border-solid border-4 border-blue-800 ml-10 ml-10">
+            <div id='container' class="border-solid border-4 border-blue-800 ml-10 mr-10">
                 <div id='account_info' class="ml-3">
                     <div class="flex">
                         <label id='account_number_label' for='account_number'><b>ID: </b></label>

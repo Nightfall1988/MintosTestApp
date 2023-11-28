@@ -93,7 +93,7 @@ class TransactionService
         return $converted;
     }
 
-    public function make($senderAmount, $recipientAmount)
+    public function make($recipientAmount, $senderAmount)
     {
         $this->recipient->current_balance +=  $recipientAmount;
         $this->sender->current_balance -= $senderAmount;

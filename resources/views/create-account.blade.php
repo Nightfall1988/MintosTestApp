@@ -6,6 +6,7 @@
 <div class="flex justify-center">
 <form id='createForm' method='POST' action="/save">
     @csrf
+    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"/>
     <label>{{ __('Currency: ') }}</label>
         <select class='ml-10' name='currency' placeholder='Currency'>
             <option>EUR</option>

@@ -16,10 +16,11 @@ class AccountService
     }
     public function execute(Request $request)
     {
-        $this->account->user_id = Auth::user()->id;
+        $this->account->user_id = $request->user_id;
         $this->account->current_balance = 0;
         $this->account->currency = $request->currency;
         $this->account->save();
+        return $this->account;
     }
 
     public function retrieveAccounts()
