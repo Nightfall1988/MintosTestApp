@@ -31,19 +31,35 @@ class TransactionControllerTest extends TestCase
 
     public function testSendWithCurrencyMismatch()
     {
-        $accountMock = $this->mock(Account::class, function ($mock) {
-            $mock->shouldReceive('getAttribute')->andReturn('USD');
-        });
+        $userSender = User::factory()->create();
+        $userRecipient = User::factory()->create();
+
+        $this->actingAs($userSender);
+
+        $accountSender = Account::factory()->create([
+            'currency' => 'USD', 
+            'user_id' => $userSender->id,
+            'current_balance' => 1000, 
+        ]);
+
+        $accountRecipient = Account::factory()->create([
+            'currency' => 'EUR', 
+            'user_id' => $userRecipient->id,
+            'current_balance' => 0, 
+        ]);
 
         $request = [
-            'recipientId' => 1,
-            'currency' => 'EUR',
+            'id' => $accountSender->id,
+            'recipientId' =>  $accountRecipient->id,
+            'currency' =>  'MXN',
+            'senderCurrency' => $accountSender->currency,
+            'transferAmount' => 100,
         ];
 
         $response = $this->post('/verified-transaction', $request);
 
-        $this->assertTrue($response->original instanceof \Illuminate\View\View);
         $this->assertEquals(400, $response->status());
+        $this->assertTrue($response->original instanceof \Illuminate\View\View);
         $this->assertEquals('errors.currency-mismatch', $response->original->name());
     }
 
