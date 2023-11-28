@@ -20,32 +20,29 @@ class AccountServiceTest extends TestCase
         
     }
 
-public function testExecute()
-{
-    $user = Mockery::mock(User::class);
-    $this->actingAs($user);
-
-    $accountModelMock = Mockery::spy(Account::class);
-
-    $request = new Request(['currency' => 'USD', 'user_id' => 1]);
-    $result = $this->accountService->execute($request);
-    $accountModelMock->shouldReceive()->once()->andReturn($result);
-
-    $this->assertInstanceOf(Account::class, $result);
-
-    Mockery::close();
-}
-
-    public function testRetrieveAccounts()
+    public function testExecute()
     {
+        $user = Mockery::mock(User::class);
+        $this->actingAs($user);
+
         $accountModelMock = Mockery::spy(Account::class);
-        $this->app->instance(Account::class, $accountModelMock);
-        $this->accountService->retrieveAccounts();
-        $accountModelMock->shouldHaveReceived('where')->once();
-        $accountModelMock->shouldHaveReceived('get')->once();
+
+        $request = new Request(['currency' => 'USD', 'user_id' => 1]);
+        $result = $this->accountService->execute($request);
+        $accountModelMock->shouldReceive()->once()->andReturn($result);
+
+        $this->assertInstanceOf(Account::class, $result);
 
         Mockery::close();
     }
 
-    // Add more tests as needed
+    public function testRetrieveAccounts()
+    {
+        $user = Mockery::mock(User::class)->makePartial();
+        $this->actingAs($user);
+        
+        $account = Account::factory()->create(['user_id' => 1]);
+        $accountCollection = $this->accountService->retrieveAccounts();
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $accountCollection);
+    }
 }

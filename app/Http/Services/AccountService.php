@@ -34,12 +34,6 @@ class AccountService
         $account = Account::where('id', $id)->first();
         return $account;
     }
-
-    public function getAccounts()
-    {
-        $accountCollection = Account::where('user_id',  Auth::user()->id)->get();
-        return $accountCollection;
-    }
 }
 
 ?>

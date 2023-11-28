@@ -26,7 +26,7 @@ class ProfileControllerTest extends TestCase
 
     public function testIndex()
     {
-        $user = Mockery::mock(User::class);
+        $user = Mockery::mock(User::class)->makePartial();
         $this->actingAs($user);
 
         $response = $this->get('/create-account');
@@ -36,6 +36,9 @@ class ProfileControllerTest extends TestCase
 
     public function testStore()
     {
+        $user = Mockery::mock(User::class)->makePartial();
+        $this->actingAs($user);
+
         $request = [
             'user_id' => rand(1,100),
             'currency' => 'MXN'
@@ -44,6 +47,7 @@ class ProfileControllerTest extends TestCase
         $response = $this->post('/save', $request);
 
         $response->assertRedirect('/home');
+
         $response->assertSessionHas('accountCollection');
     }
 

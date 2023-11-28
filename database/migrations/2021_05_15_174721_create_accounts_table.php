@@ -16,8 +16,8 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->float('current_balance');
-            $table->string('currency');
+            $table->decimal('current_balance', 10, 2)->default(0);
+            $table->string('currency')->default('USD');
             $table->timestamps();
         });
     }
