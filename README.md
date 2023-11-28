@@ -11,11 +11,18 @@
 
 To setup this project open a terminal window in MintosTestApp directory.
 
-Enter commands to download all dependencies:
+1. Enter commands to download all dependencies:
+    - composer install
+    - npm install
 
-- composer install
-- npm install
+2. Rename the file ".env.example" to just ".env" and use these commands to clear the cache.
+    - php artisan config:clear
+    - php artisan cache:clear
 
-Enter command to start server:
-- php artisan serve
+3. Make database migrations with  this command:
+    - php artisan migrate:fresh
 
+4. Enter command to start server:
+    - php artisan serve
+
+The project should be set up at this point.
