@@ -26,3 +26,6 @@ To setup this project open a terminal window in MintosTestApp directory.
     - php artisan serve
 
 The project should be set up at this point.
+
+5. To run unit tests the command is:
+    - php artisan test
