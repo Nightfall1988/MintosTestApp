@@ -1,78 +1,102 @@
 <?php
 
-// namespace Tests\Unit\Controllers;
+use App\Http\Controllers\TransactionController;
+use App\Http\Services\TransactionService;
+use App\Models\Account;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\View;
+use Tests\TestCase;
+use App\Models\User;
 
-// use Tests\TestCase;
-// use App\Http\Controllers\TransactionController;
-// use App\Http\Services\TransactionService;
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Http\Request;
-// use App\Models\Account;
-// use App\Models\Transaction;
 
-// class TransactionControllerTest extends TestCase
-// {
-//     use RefreshDatabase;
+class TransactionControllerTest extends TestCase
+{
+    use DatabaseTransactions;
 
-//     private TransactionController $transactionController;
+    private $transactionController;
 
-//     protected function setUp(): void
-//     {
-//         parent::setUp();
-//         $this->transactionController = new TransactionController();
-//     }
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $user = Mockery::mock(User::class)->makePartial();
+        $this->actingAs($user);
+        $this->mock(TransactionService::class, function ($mock) {
+            $mock->shouldReceive('transfer');
+        });
 
-//     public function testSendWithCurrencyMismatch()
-//     {
-//         $request = new Request([
-//             'recipientId' => 1,
-//             'currency' => 'USD',
-//             'senderCurrency' => 'EUR',
-//             'id' => 2,
-//             'transferAmount' => 100,
-//         ]);
+        $this->transactionController = new TransactionController();
+    }
 
-//         $response = $this->transactionController->send($request);
+    public function testSendWithCurrencyMismatch()
+    {
+        $accountMock = $this->mock(Account::class, function ($mock) {
+            $mock->shouldReceive('getAttribute')->andReturn('USD'); // Adjust as needed
+        });
 
-//         $this->assertEquals(400, $response->getStatusCode());
-//         $this->assertViewIs('errors.currency-mismatch');
-//     }
+        $request = [
+            'recipientId' => 1,
+            'currency' => 'EUR',
+        ];
 
-//     public function testSendWithCurrencyMatch()
-//     {
-//         $request = new Request([
-//             'recipientId' => 1,
-//             'currency' => 'USD',
-//             'senderCurrency' => 'USD',
-//             'id' => 2,
-//             'transferAmount' => 100,
-//         ]);
+        $response = $this->post('/verified-transaction', $request);
 
-//         // Assuming you have mocked the TransactionService and covered its tests
-//         // You can mock the TransactionService if it interacts with external services or databases
-//         // $this->mock(TransactionService::class)->shouldReceive('transfer');
+        $this->assertTrue($response->original instanceof \Illuminate\View\View);
+        $this->assertEquals(400, $response->status());
+        $this->assertEquals('errors.currency-mismatch', $response->original->name());
+    }
 
-//         $response = $this->transactionController->send($request);
+    public function testSendWithCurrencyMatch()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
-//         $this->assertEquals(200, $response->getStatusCode());
-//         $this->assertViewIs('transactionApproved');
-//     }
+        $accountMock = $this->mock(Account::class, function ($mock) {
+            $mock->shouldReceive('getAttribute')->andReturn('USD');
+        });
 
-//     public function testGetRecieverCurrencyWithValidRecipientId()
-//     {
-//         $account = factory(Account::class)->create(['currency' => 'USD']);
+        $request = [
+            'id' => 4,
+            'recipientId' => 2,
+            'currency' => 'USD',
+            'senderCurrency' => 'USD',
+            'transferAmount' => 100,
+        ];
 
-//         $currency = $this->transactionController->getRecieverCurrency($account->id);
+        $response = $this->post('/verified-transaction', $request);
 
-//         $this->assertEquals('USD', $currency);
-//     }
+        $this->assertEquals(200, $response->status());
+        $response->assertViewIs('transactionApproved');
+    }
 
-//     public function testGetRecieverCurrencyWithInvalidRecipientId()
-//     {
-//         $currency = $this->transactionController->getRecieverCurrency(999);
+    public function testGetReceiverCurrency()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $accountMock = $this->mock(Account::class, function ($mock) {
+            $mock->shouldReceive('getAttribute')->andReturn('USD');
+        });
 
-//         $this->assertEquals('0', $currency);
-//     }
+        $response = $this->get('/get-reciever-currency/1');
 
-//     // Add more tests for the show and sellStock methods as needed
-// }
+        $this->assertEquals(200, $response->status());
+        $this->assertEquals('USD', $response->original);
+    }
+
+    public function testShow()
+    {
+        $transactionMock = $this->mock(Transaction::class, function ($mock) {
+            $mock->shouldReceive('where')->andReturnSelf();
+            $mock->shouldReceive('orWhere')->andReturnSelf();
+            $mock->shouldReceive('orderBy')->andReturnSelf();
+            $mock->shouldReceive('paginate')->andReturn(collect());
+        });
+
+        $response = $this->get('/transaction-history/4');
+        $this->assertInstanceOf(\Illuminate\View\View::class, $response->original);
+        $response->assertViewIs('transactionHistory');
+        $this->assertArrayHasKey('tansactionCollection', $response->getOriginalContent()->getData());
+        $this->assertArrayHasKey('accountId', $response->getOriginalContent()->getData());
+    }
+}

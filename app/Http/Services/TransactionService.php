@@ -30,9 +30,6 @@ class TransactionService
         }
     }
 
-    public function getRecieverCurrency($recipientId) {
-    }
-
     public function checkCurrency()
     {
         $senderCurrency = $this->sender->currency;
@@ -105,7 +102,7 @@ class TransactionService
     public function saveToHistory()
     {
         $transaction = new Transaction;
-        $clientId = Auth::id();
+        $clientId = Auth::user()->id;
         $transaction->client_id = $clientId;
         $transaction->sender_id = $this->sender->id;
         $transaction->recipient_id = $this->recipient->id;
