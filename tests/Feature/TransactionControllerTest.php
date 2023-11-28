@@ -49,18 +49,28 @@ class TransactionControllerTest extends TestCase
 
     public function testSendWithCurrencyMatch()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $userSender = User::factory()->create();
+        $userRecipient = User::factory()->create();
 
-        $accountMock = $this->mock(Account::class, function ($mock) {
-            $mock->shouldReceive('getAttribute')->andReturn('USD');
-        });
+        $this->actingAs($userSender);
+
+        $accountSender = Account::factory()->create([
+            'currency' => 'USD', 
+            'user_id' => $userSender->id,
+            'current_balance' => 1000, 
+        ]);
+
+        $accountRecipient = Account::factory()->create([
+            'currency' => 'USD', 
+            'user_id' => $userRecipient->id,
+            'current_balance' => 0, 
+        ]);
 
         $request = [
-            'id' => 4,
-            'recipientId' => 2,
-            'currency' => 'USD',
-            'senderCurrency' => 'USD',
+            'id' => $accountSender->id,
+            'recipientId' =>  $accountRecipient->id,
+            'currency' =>  $accountRecipient->currency,
+            'senderCurrency' => $accountSender->currency,
             'transferAmount' => 100,
         ];
 
