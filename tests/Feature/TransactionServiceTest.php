@@ -13,16 +13,11 @@ class TransactionServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        // You might want to set up your database, migrations, and necessary data here
-        // This could include creating user accounts, currencies, etc.
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-
-        // Clean up any data created during tests
     }
 
     public function testCheckCurrencyWithSameCurrency()
@@ -78,6 +73,4 @@ class TransactionServiceTest extends TestCase
             'currency' => 'USD',
         ]);
     }
-
-    // Add more test methods for other parts of your TransactionService class
 }

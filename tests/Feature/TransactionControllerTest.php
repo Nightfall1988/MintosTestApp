@@ -32,7 +32,7 @@ class TransactionControllerTest extends TestCase
     public function testSendWithCurrencyMismatch()
     {
         $accountMock = $this->mock(Account::class, function ($mock) {
-            $mock->shouldReceive('getAttribute')->andReturn('USD'); // Adjust as needed
+            $mock->shouldReceive('getAttribute')->andReturn('USD');
         });
 
         $request = [
@@ -84,11 +84,13 @@ class TransactionControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        $accountMock = $this->mock(Account::class, function ($mock) {
-            $mock->shouldReceive('getAttribute')->andReturn('USD');
-        });
+        $accountSender = Account::factory()->create([
+            'currency' => 'USD', 
+            'user_id' => $user->id,
+            'current_balance' => 1000, 
+        ]);
 
-        $response = $this->get('/get-reciever-currency/1');
+        $response = $this->get('/get-reciever-currency/' . $accountSender->id);
 
         $this->assertEquals(200, $response->status());
         $this->assertEquals('USD', $response->original);

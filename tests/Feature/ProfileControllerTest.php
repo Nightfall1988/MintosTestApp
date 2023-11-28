@@ -20,7 +20,7 @@ class ProfileControllerTest extends TestCase
     {
         parent::setUp();
         $account = new Account;
-        $accountService = new AccountService($account); // You might need to mock this service
+        $accountService = new AccountService($account);
         $this->profileController = new ProfileController($accountService);
         $user = Mockery::mock(User::class)->makePartial();
         $this->actingAs($user);

@@ -15,7 +15,7 @@ class AccountServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $account = new Account(); // You might need to mock this model
+        $account = new Account();
         $this->accountService = new AccountService($account);
         
     }
