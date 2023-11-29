@@ -15,7 +15,7 @@ To setup this project open a terminal window in MintosTestApp directory.
     - composer install
     - npm install
 
-2. Rename the file ".env.example" to just ".env" and use these commands to clear the cache.
+2. Rename the file ".env.example" to just ".env" and create a database named "mintos_test_db". Use these commands to clear the cache.
     - php artisan config:clear
     - php artisan cache:clear
 
